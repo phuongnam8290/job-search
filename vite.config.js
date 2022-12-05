@@ -9,9 +9,15 @@ import vue from "@vitejs/plugin-vue";
 export default defineConfig({
   plugins: [vue()],
   resolve: {
-    alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
-    },
+    alias: [
+      { find: "@", replacement: fileURLToPath(new URL("./src", import.meta.url)) },
+      // Workaround for vitest & @testing-library/vue importing different build of @vue/test-utils. Use when you want to
+      // work directly with the underlying @vue/test-utils for stubs global component, function...
+      {
+        find: "@vue/test-utils",
+        replacement: "/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js",
+      },
+    ],
   },
   test: {
     globals: true,
