@@ -9,6 +9,11 @@ config.global.stubs = {
   RouterLink: RouterLinkStub,
 };
 
+// Mock global instance properties
+config.global.mocks = {
+  $route: "",
+};
+
 expect.extend(matchers);
 
 afterEach(() => {

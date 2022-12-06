@@ -4,10 +4,10 @@ describe("TheSubnav", () => {
   describe("when user is on jobs page", () => {
     it("displays job count", () => {
       render(TheSubnav, {
-        data() {
-          return {
-            onJobResultPage: true,
-          };
+        global: {
+          mocks: {
+            $route: { name: "JobResults" },
+          },
         },
       });
 
@@ -19,10 +19,10 @@ describe("TheSubnav", () => {
   describe("when user is not on jobs page", () => {
     it("does NOT display job count", () => {
       render(TheSubnav, {
-        data() {
-          return {
-            onJobResultPage: false,
-          };
+        global: {
+          mocks: {
+            $route: { name: "Home" },
+          },
         },
       });
 

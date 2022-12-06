@@ -6,8 +6,10 @@
 
         <nav class="ml-12 h-full">
           <ul class="flex h-full list-none">
-            <li v-for="menuItem of menuItems" :key="menuItem" class="ml-9 h-full first:ml-0">
-              <a href="#" class="5 flex h-full items-center py-2.5">{{ menuItem }}</a>
+            <li v-for="menuItem of menuItems" :key="menuItem.text" class="ml-9 h-full first:ml-0">
+              <router-link :to="{ name: menuItem.name }" class="5 flex h-full items-center py-2.5">
+                {{ menuItem.text }}
+              </router-link>
             </li>
           </ul>
         </nav>
@@ -37,7 +39,14 @@ export default {
   },
   data() {
     return {
-      menuItems: ["Teams", "Locations", "Life at Bobo Corp", "How we hire", "Students", "Jobs"],
+      menuItems: [
+        { text: "Teams", name: "Home" },
+        { text: "Locations", name: "Home" },
+        { text: "Life at Bobo Corp", name: "Home" },
+        { text: "How we hire", name: "Home" },
+        { text: "Students", name: "Home" },
+        { text: "Jobs", name: "JobResults" },
+      ],
       isLoggedIn: false,
     };
   },
