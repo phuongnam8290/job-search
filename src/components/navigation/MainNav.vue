@@ -30,6 +30,9 @@ import ActionButton from "@/components/shared/ActionButton.vue";
 import ProfileImage from "@/components/navigation/ProfileImage.vue";
 import TheSubnav from "@/components/navigation/TheSubnav.vue";
 
+import { mapState, mapActions } from "pinia";
+import { useUserStore } from "@/stores/user";
+
 export default {
   name: "MainNav",
   components: {
@@ -47,10 +50,10 @@ export default {
         { text: "Students", name: "Home" },
         { text: "Jobs", name: "JobResults" },
       ],
-      isLoggedIn: false,
     };
   },
   computed: {
+    ...mapState(useUserStore, ["isLoggedIn"]),
     headerHeightClass() {
       return {
         "h-16": !this.isLoggedIn,
@@ -59,9 +62,7 @@ export default {
     },
   },
   methods: {
-    loginUser() {
-      this.isLoggedIn = true;
-    },
+    ...mapActions(useUserStore, { loginUser: "loginUser" }),
   },
 };
 </script>
