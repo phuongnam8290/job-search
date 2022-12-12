@@ -3,6 +3,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import HomeView from "@/view/HomeView.vue";
 import JobResultsView from "@/view/JobResultsView.vue";
 import JobView from "@/view/JobView.vue";
+import TeamsView from "@/view/TeamsView.vue";
 
 // Modify the vue-router.d.ts or mark its as plain text to enable intellisense.
 
@@ -21,6 +22,11 @@ const routes = [
     path: "/jobs/results/:id",
     name: "JobListing",
     component: JobView,
+  },
+  {
+    path: "/teams",
+    name: "Teams",
+    component: TeamsView,
   },
 ];
 

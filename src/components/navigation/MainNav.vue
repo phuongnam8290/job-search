@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       menuItems: [
-        { text: "Teams", name: "Home" },
+        { text: "Teams", name: "Teams" },
         { text: "Locations", name: "Home" },
         { text: "Life at Bobo Corp", name: "Home" },
         { text: "How we hire", name: "Home" },
