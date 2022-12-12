@@ -1,6 +1,8 @@
 import { render, screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
+import { nextTick } from "vue";
 
+import { useUserStore } from "@/stores/user";
 import MainNav from "@/components/navigation/MainNav.vue";
 
 describe("MainNav", () => {
@@ -30,7 +32,15 @@ describe("MainNav", () => {
       const loginButton = screen.getByRole("button", {
         name: /sign in/i,
       });
+
       await userEvent.click(loginButton);
+
+      // Simulate isLoggedIn changing value after user click loginButton
+      const userStore = useUserStore();
+      userStore.isLoggedIn = true;
+
+      // Wait until userStore state updated.
+      await nextTick();
 
       profileImage = screen.getByRole("img", {
         name: /User profile image/i,

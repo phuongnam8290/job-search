@@ -6,7 +6,7 @@ import { expect, afterEach } from "vitest";
 import { createTestingPinia } from "@pinia/testing";
 
 // Using real pinia for testing
-config.global.plugins = [createTestingPinia({ stubActions: false })];
+config.global.plugins = [createTestingPinia()];
 
 // Stub global component, using the underlying @vue/test-utils
 config.global.stubs = {
