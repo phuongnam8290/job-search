@@ -16,7 +16,7 @@
 
         <div class="ml-auto flex h-full items-center">
           <profile-image v-if="isLoggedIn" />
-          <action-button v-else text="Sign in" @click="loginUser" />
+          <action-button v-else text="Sign in" @click="LOGIN_USER" />
         </div>
       </div>
 
@@ -31,7 +31,7 @@ import ProfileImage from "@/components/navigation/ProfileImage.vue";
 import TheSubnav from "@/components/navigation/TheSubnav.vue";
 
 import { mapState, mapActions } from "pinia";
-import { useUserStore } from "@/stores/user";
+import { useUserStore, LOGIN_USER } from "@/stores/user";
 
 export default {
   name: "MainNav",
@@ -62,7 +62,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useUserStore, { loginUser: "loginUser" }),
+    ...mapActions(useUserStore, { LOGIN_USER }),
   },
 };
 </script>

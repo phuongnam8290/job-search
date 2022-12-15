@@ -1,7 +1,11 @@
 <template>
   <main class="flex-auto bg-brand-gray-2 p-8">
     <ol>
-      <li v-for="job of displayedJobs" :key="job.id" class="mb-7">
+      <li
+        v-for="job of displayedJobs"
+        :key="job.id"
+        class="mb-7"
+      >
         <job-listing :job="job" />
       </li>
     </ol>
@@ -37,7 +41,7 @@
 <script>
 import JobListing from "@/components/job-results/JobListing.vue";
 import { mapState, mapActions } from "pinia";
-import { useJobsStore, FETCH_JOBS } from "@/stores/jobs";
+import { useJobsStore, FETCH_JOBS, FILTERED_JOBS_BY_ORGANIZATIONS } from "@/stores/jobs";
 
 export default {
   name: "JobListings",
@@ -45,7 +49,7 @@ export default {
     JobListing,
   },
   computed: {
-    ...mapState(useJobsStore, ["jobs"]),
+    ...mapState(useJobsStore, { FILTERED_JOBS_BY_ORGANIZATIONS }),
     currentPage() {
       return Number.parseInt(this.$route.query.page || "1");
     },
@@ -55,14 +59,14 @@ export default {
       return previousPage >= firstPage ? previousPage : undefined;
     },
     nextPage() {
-      const lastPage = Math.ceil(this.jobs.length / 10);
+      const lastPage = Math.ceil(this[FILTERED_JOBS_BY_ORGANIZATIONS].length / 10);
       const nextPage = this.currentPage + 1;
       return nextPage <= lastPage ? nextPage : undefined;
     },
     displayedJobs() {
       const firstJobIndex = (this.currentPage - 1) * 10;
       const lastJobIndex = this.currentPage * 10;
-      return this.jobs.slice(firstJobIndex, lastJobIndex);
+      return this[FILTERED_JOBS_BY_ORGANIZATIONS].slice(firstJobIndex, lastJobIndex);
     },
   },
   async mounted() {

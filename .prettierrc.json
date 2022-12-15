@@ -1,4 +1,5 @@
 {
   "printWidth": 120,
-  "htmlWhitespaceSensitivity": "strict"
+  "htmlWhitespaceSensitivity": "strict",
+  "singleAttributePerLine": true
 }
