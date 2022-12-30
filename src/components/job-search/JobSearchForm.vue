@@ -3,12 +3,23 @@
     class="flex h-12 w-full items-center rounded-3xl border border-solid border-brand-gray-3"
     @submit.prevent="searchForJobs"
   >
-    <font-awesome-icon :icon="['fas', 'search']" class="ml-4 mr-3" />
+    <font-awesome-icon
+      :icon="['fas', 'search']"
+      class="ml-4 mr-3"
+    />
 
     <div class="flex h-full flex-1 flex-nowrap text-base font-light">
       <div class="relative flex h-full flex-1 items-center pr-3">
-        <label for="role" class="absolute left-0 -top-8">Role</label>
-        <text-input id="role" v-model="role" placeholder="Software engineer" />
+        <label
+          for="role"
+          class="absolute left-0 -top-8"
+          >Role</label
+        >
+        <text-input
+          id="role"
+          v-model="role"
+          placeholder="Software engineer"
+        />
       </div>
     </div>
 
@@ -16,12 +27,24 @@
 
     <div class="flex h-full flex-1 flex-nowrap text-base font-light">
       <div class="relative flex h-full flex-1 items-center pl-3">
-        <label for="location" class="absolute left-3 -top-8">Where?</label>
-        <text-input id="location" v-model="location" placeholder="Los Angeles" />
+        <label
+          for="location"
+          class="absolute left-3 -top-8"
+          >Where?</label
+        >
+        <text-input
+          id="location"
+          v-model="location"
+          placeholder="Los Angeles"
+        />
       </div>
     </div>
 
-    <action-button text="Search" type="secondary" class="rounded-r-3xl" />
+    <action-button
+      text="Search"
+      type="secondary"
+      class="rounded-r-3xl"
+    />
   </form>
 </template>
 

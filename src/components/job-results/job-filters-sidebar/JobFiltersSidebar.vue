@@ -4,10 +4,14 @@
       <div class="flex justify-between">
         <h3 class="my-4 text-base font-semibold">What do you want to do?</h3>
         <div class="flex items-center text-sm">
-          <action-button text="Clear filters" type="secondary" />
+          <action-button
+            text="Clear filters"
+            type="secondary"
+          />
         </div>
       </div>
 
+      <JobFiltersSidebarJobTypes />
       <job-filters-sidebar-organizations />
     </section>
   </div>
@@ -16,12 +20,14 @@
 <script>
 import ActionButton from "@/components/shared/ActionButton.vue";
 import JobFiltersSidebarOrganizations from "@/components/job-results/job-filters-sidebar/JobFiltersSidebarOrganizations.vue";
+import JobFiltersSidebarJobTypes from "@/components/job-results/job-filters-sidebar/JobFiltersSidebarJobTypes.vue";
 
 export default {
   name: "JobFiltersSidebar",
   components: {
     ActionButton,
     JobFiltersSidebarOrganizations,
+    JobFiltersSidebarJobTypes,
   },
 };
 </script>

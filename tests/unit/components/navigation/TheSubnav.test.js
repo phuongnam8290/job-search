@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/vue";
 import { nextTick } from "vue";
-import { useJobsStore, FILTERED_JOBS_BY_ORGANIZATIONS } from "@/stores/jobs";
+import { useJobsStore, FILTERED_JOBS } from "@/stores/jobs";
 
 import TheSubnav from "@/components/navigation/TheSubnav.vue";
 
@@ -21,7 +21,7 @@ describe("TheSubnav", () => {
     it("displays job count", async () => {
       const { jobsStore } = renderSubnav("JobResults");
       const numberOfJobs = 16;
-      jobsStore[FILTERED_JOBS_BY_ORGANIZATIONS] = Array(numberOfJobs).fill({});
+      jobsStore[FILTERED_JOBS] = Array(numberOfJobs).fill({});
 
       await nextTick();
       const jobCount = screen.getByText(numberOfJobs);
@@ -33,7 +33,7 @@ describe("TheSubnav", () => {
     it("does NOT display job count", () => {
       const { jobsStore } = renderSubnav("Home");
       const numberOfJobs = 16;
-      jobsStore[FILTERED_JOBS_BY_ORGANIZATIONS] = Array(numberOfJobs).fill({});
+      jobsStore[FILTERED_JOBS] = Array(numberOfJobs).fill({});
 
       const jobCount = screen.queryByText(numberOfJobs);
       expect(jobCount).not.toBeInTheDocument();

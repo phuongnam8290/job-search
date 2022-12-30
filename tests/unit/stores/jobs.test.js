@@ -1,6 +1,12 @@
 import { createPinia, setActivePinia } from "pinia";
 import axios from "axios";
-import { useJobsStore, UNIQUE_ORGANIZATIONS, FILTERED_JOBS_BY_ORGANIZATIONS } from "@/stores/jobs";
+import {
+  useJobsStore, //
+  UNIQUE_ORGANIZATIONS,
+  UNIQUE_JOB_TYPES,
+  INCLUDE_JOB_BY_ORGANIZATION,
+  INCLUDE_JOB_BY_JOB_TYPE,
+} from "@/stores/jobs";
 import { useUserStore } from "@/stores/user";
 
 vi.mock("axios");
@@ -38,44 +44,68 @@ describe("getters", () => {
     });
   });
 
-  describe("FILTERED_JOBS_BY_ORGANIZATIONS", () => {
-    it("identifies jobs that are associated with the given organizations", () => {
+  describe("UNIQUE_JOBS_TYPE", () => {
+    it("finds unique job types from list of jobs", () => {
       const jobsStore = useJobsStore();
       jobsStore.jobs = [
-        { organization: "Google" },
-        { organization: "Facebook" },
-        { organization: "Microsoft" },
-        { organization: "Amazon" },
+        { jobType: "Full-time" }, //
+        { jobType: "Part-time" },
+        { jobType: "Full-time" },
       ];
 
-      const userStore = useUserStore();
-      userStore.selectedOrganizations = ["Google", "Microsoft"];
-
-      const filteredJobs = jobsStore[FILTERED_JOBS_BY_ORGANIZATIONS];
-      expect(filteredJobs).toEqual([
-        { organization: "Google" }, //
-        { organization: "Microsoft" },
-      ]);
+      expect(jobsStore[UNIQUE_JOB_TYPES]).toEqual(new Set(["Full-time", "Part-time"]));
     });
+  });
 
+  describe("INCLUDE_JOB_BY_ORGANIZATION", () => {
     describe("when the user has not selected any organizations", () => {
-      it("returns all job", () => {
-        const jobs = [
-          { organization: "Google" },
-          { organization: "Facebook" },
-          { organization: "Microsoft" },
-          { organization: "Amazon" },
-        ];
-
-        const jobsStore = useJobsStore();
-        jobsStore.jobs = jobs;
-
+      it("include job", () => {
         const userStore = useUserStore();
         userStore.selectedOrganizations = [];
 
-        const filteredJobs = jobsStore[FILTERED_JOBS_BY_ORGANIZATIONS];
-        expect(filteredJobs).toEqual(jobs);
+        const jobStore = useJobsStore();
+        const job = { organization: "Google" };
+
+        const result = jobStore[INCLUDE_JOB_BY_ORGANIZATION](job);
+        expect(result).toBe(true);
       });
+    });
+
+    it("identifies if job is associated with given organizations", () => {
+      const userStore = useUserStore();
+      userStore.selectedOrganizations = ["Google", "Microsoft"];
+
+      const jobStore = useJobsStore();
+      const job = { organization: "Google" };
+
+      const result = jobStore[INCLUDE_JOB_BY_ORGANIZATION](job);
+      expect(result).toBe(true);
+    });
+  });
+
+  describe("INCLUDE_JOB_BY_JOB_TYPE", () => {
+    describe("when the user has not selected any job type", () => {
+      it("include job", () => {
+        const userStore = useUserStore();
+        userStore.selectedJobTypes = [];
+
+        const jobStore = useJobsStore();
+        const job = { jobType: "Full-time" };
+
+        const result = jobStore[INCLUDE_JOB_BY_JOB_TYPE](job);
+        expect(result).toBe(true);
+      });
+    });
+
+    it("identifies if job is associated with given job type", () => {
+      const userStore = useUserStore();
+      userStore.selectedJobTypes = ["Full-time", "Part-time"];
+
+      const jobStore = useJobsStore();
+      const job = { jobType: "Full-time" };
+
+      const result = jobStore[INCLUDE_JOB_BY_JOB_TYPE](job);
+      expect(result).toBe(true);
     });
   });
 });

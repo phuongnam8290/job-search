@@ -21,21 +21,51 @@ describe("JobFiltersSidebarOrganizations", () => {
     expect(organizations).toEqual(["Google", "Amazon"]);
   });
 
-  it("communicates that user has selected checkbox for organizations", async () => {
-    render(JobFiltersSidebarOrganizations);
+  describe("when user click checkbox", () => {
+    it("communicates that user has selected checkbox for organizations", async () => {
+      render(JobFiltersSidebarOrganizations, {
+        global: {
+          mocks: {
+            $router: { push: vi.fn() },
+          },
+        },
+      });
 
-    const jobsStore = useJobsStore();
-    const userStore = useUserStore();
-    jobsStore[UNIQUE_ORGANIZATIONS] = new Set(["Google", "Amazon"]);
+      const jobsStore = useJobsStore();
+      const userStore = useUserStore();
+      jobsStore[UNIQUE_ORGANIZATIONS] = new Set(["Google", "Amazon"]);
 
-    const button = screen.getByRole("button", { name: /organization/i });
-    await userEvent.click(button);
+      const button = screen.getByRole("button", { name: /organization/i });
+      await userEvent.click(button);
 
-    const googleCheckbox = screen.getByRole("checkbox", {
-      name: /google/i,
+      const googleCheckbox = screen.getByRole("checkbox", {
+        name: /google/i,
+      });
+      await userEvent.click(googleCheckbox);
+
+      expect(userStore[ADD_SELECTED_ORGANIZATIONS]).toBeCalledWith(["Google"]);
     });
-    await userEvent.click(googleCheckbox);
 
-    expect(userStore[ADD_SELECTED_ORGANIZATIONS]).toBeCalledWith(["Google"]);
+    it("navigate user to job results page to see fresh batch of filtered jobs", async () => {
+      const $router = { push: vi.fn() };
+      render(JobFiltersSidebarOrganizations, {
+        global: {
+          mocks: { $router },
+        },
+      });
+
+      const jobsStore = useJobsStore();
+      jobsStore[UNIQUE_ORGANIZATIONS] = new Set(["Google", "Amazon"]);
+
+      const button = screen.getByRole("button", { name: /organization/i });
+      await userEvent.click(button);
+
+      const googleCheckbox = screen.getByRole("checkbox", {
+        name: /google/i,
+      });
+      await userEvent.click(googleCheckbox);
+
+      expect($router.push).toBeCalledWith({ name: "JobResults" });
+    });
   });
 });
