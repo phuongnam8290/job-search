@@ -1,19 +1,13 @@
 import { render, screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
+import { useRouter } from "vue-router";
 
 import JobSearchForm from "@/components/job-search/JobSearchForm.vue";
 
 describe("JobSearchForm", () => {
   describe("when user submit form", () => {
     it("directs user to job results page with user's search parameters", async () => {
-      const push = vi.fn();
-      render(JobSearchForm, {
-        global: {
-          mocks: {
-            $router: { push },
-          },
-        },
-      });
+      render(JobSearchForm);
 
       const roleInput = screen.getByRole("textbox", {
         name: /role/i,
@@ -29,7 +23,8 @@ describe("JobSearchForm", () => {
       await userEvent.type(locationInput, "Dallas");
       await userEvent.click(searchButton);
 
-      expect(push).toHaveBeenCalledWith({
+      let router = useRouter();
+      expect(router.push).toHaveBeenCalledWith({
         name: "JobResults",
         query: { role: "Vue Developer", location: "Dallas" },
       });
