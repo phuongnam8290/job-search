@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
+import { useRouter } from "vue-router";
 
 import { useJobsStore, UNIQUE_JOB_TYPES } from "@/stores/jobs";
 import { useUserStore, ADD_SELECTED_JOB_TYPES } from "@/stores/user";
@@ -23,13 +24,7 @@ describe("JobFiltersSidebarJobTypes", () => {
 
   describe("when user click checkbox", () => {
     it("communicates that user has selected checkbox for job types", async () => {
-      render(JobFiltersSidebarJobTypes, {
-        global: {
-          mocks: {
-            $router: { push: vi.fn() },
-          },
-        },
-      });
+      render(JobFiltersSidebarJobTypes);
 
       const jobsStore = useJobsStore();
       const userStore = useUserStore();
@@ -47,12 +42,7 @@ describe("JobFiltersSidebarJobTypes", () => {
     });
 
     it("navigate user to job result page to see fresh batch of filtered jobs", async () => {
-      const $router = { push: vi.fn() };
-      render(JobFiltersSidebarJobTypes, {
-        global: {
-          mocks: { $router },
-        },
-      });
+      render(JobFiltersSidebarJobTypes);
 
       const jobsStore = useJobsStore();
       jobsStore[UNIQUE_JOB_TYPES] = new Set(["Full-time", "Part-time"]);
@@ -65,7 +55,8 @@ describe("JobFiltersSidebarJobTypes", () => {
       });
       await userEvent.click(fulltimeCheckbox);
 
-      expect($router.push).toBeCalledWith({ name: "JobResults" });
+      const router = useRouter();
+      expect(router.push).toBeCalledWith({ name: "JobResults" });
     });
   });
 });

@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
+import { useRouter } from "vue-router";
 
 import { useJobsStore, UNIQUE_ORGANIZATIONS } from "@/stores/jobs";
 import { useUserStore, ADD_SELECTED_ORGANIZATIONS } from "@/stores/user";
@@ -23,13 +24,7 @@ describe("JobFiltersSidebarOrganizations", () => {
 
   describe("when user click checkbox", () => {
     it("communicates that user has selected checkbox for organizations", async () => {
-      render(JobFiltersSidebarOrganizations, {
-        global: {
-          mocks: {
-            $router: { push: vi.fn() },
-          },
-        },
-      });
+      render(JobFiltersSidebarOrganizations);
 
       const jobsStore = useJobsStore();
       const userStore = useUserStore();
@@ -47,12 +42,7 @@ describe("JobFiltersSidebarOrganizations", () => {
     });
 
     it("navigate user to job results page to see fresh batch of filtered jobs", async () => {
-      const $router = { push: vi.fn() };
-      render(JobFiltersSidebarOrganizations, {
-        global: {
-          mocks: { $router },
-        },
-      });
+      render(JobFiltersSidebarOrganizations);
 
       const jobsStore = useJobsStore();
       jobsStore[UNIQUE_ORGANIZATIONS] = new Set(["Google", "Amazon"]);
@@ -65,7 +55,8 @@ describe("JobFiltersSidebarOrganizations", () => {
       });
       await userEvent.click(googleCheckbox);
 
-      expect($router.push).toBeCalledWith({ name: "JobResults" });
+      const router = useRouter();
+      expect(router.push).toBeCalledWith({ name: "JobResults" });
     });
   });
 });
