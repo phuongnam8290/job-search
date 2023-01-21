@@ -38,58 +38,51 @@
   </main>
 </template>
 
-<script>
-import JobListing from "@/components/job-results/JobListing.vue";
-import { mapState, mapActions } from "pinia";
-import { useJobsStore, FETCH_JOBS, FILTERED_JOBS } from "@/stores/jobs";
+<script setup>
+import { computed, onMounted, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
-export default {
-  name: "JobListings",
-  components: {
-    JobListing,
-  },
-  computed: {
-    ...mapState(useJobsStore, { FILTERED_JOBS }),
-    currentPage() {
-      return Number.parseInt(this.$route.query.page || "1");
-    },
-    previousPage() {
-      const firstPage = 1;
-      const previousPage = this.currentPage - 1;
-      return previousPage >= firstPage ? previousPage : undefined;
-    },
-    nextPage() {
-      const nextPage = this.currentPage + 1;
-      return nextPage <= this.lastPage ? nextPage : undefined;
-    },
-    lastPage() {
-      return Math.ceil(this[FILTERED_JOBS].length / 10);
-    },
-    displayedJobs() {
-      const firstJobIndex = (this.currentPage - 1) * 10;
-      const lastJobIndex = this.currentPage * 10;
-      return this[FILTERED_JOBS].slice(firstJobIndex, lastJobIndex);
-    },
-  },
-  watch: {
-    currentPage(newPage) {
-      if (newPage > this.lastPage) {
-        this.$router.push({
-          name: "JobResults",
-          query: {
-            page: this.lastPage,
-          },
-        });
-      }
-    },
-  },
-  async mounted() {
-    await this[FETCH_JOBS]();
-  },
-  methods: {
-    ...mapActions(useJobsStore, { FETCH_JOBS }),
-  },
-};
+import { useJobsStore } from "@/stores/jobs";
+import JobListing from "@/components/job-results/JobListing.vue";
+
+const jobsStore = useJobsStore();
+onMounted(jobsStore.FETCH_JOBS);
+
+const FILTERED_JOBS = computed(() => jobsStore.FILTERED_JOBS);
+
+const router = useRouter();
+const route = useRoute();
+
+const lastPage = computed(() => Math.ceil(FILTERED_JOBS.value.length / 10));
+
+const currentPage = computed(() => Number.parseInt(route.query.page) || 1);
+watch(currentPage, (newPage) => {
+  if (newPage > lastPage.value) {
+    router.push({
+      name: "JobResults",
+      query: {
+        page: lastPage.value,
+      },
+    });
+  }
+});
+
+const previousPage = computed(() => {
+  const firstPage = 1;
+  const previousPage = currentPage.value - 1;
+  return previousPage >= firstPage ? previousPage : undefined;
+});
+
+const nextPage = computed(() => {
+  const nextPage = currentPage.value + 1;
+  return nextPage <= lastPage.value ? nextPage : undefined;
+});
+
+const displayedJobs = computed(() => {
+  const firstJobIndex = (currentPage.value - 1) * 10;
+  const lastJobIndex = currentPage.value * 10;
+  return FILTERED_JOBS.value.slice(firstJobIndex, lastJobIndex);
+});
 </script>
 
 <style scoped></style>
